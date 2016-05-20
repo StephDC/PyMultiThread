@@ -1,4 +1,7 @@
 #! /usr/bin/env python3
+# Binary list with chaining that would allow
+# storing a list of bool with minimum memory
+
 maxLength = 63
 
 class binList():
@@ -14,6 +17,9 @@ class binList():
         for i in self:
             result.append(i)
         return str(result)
+
+    def __repr__(self):
+        return str(self)
 
     def __iter__(self):
         return binListIter(self)
@@ -47,7 +53,7 @@ class binList():
         if self.length <= index:
             raise IndexError("list index out of range")
         else:
-            self.data = self.data % (1<<index) + int(self.data / (2<<(index+1))) * (1<<index)
+            self.data = self.data%(1<<index)+(self.data>>(1+index)<<index)
             self.length -= 1
             self.totalLength -= 1
 
@@ -82,8 +88,11 @@ class binList():
     def remItem(self,index):
         self.__delitem__(index)
 
-    def append(self,index):
-        self.pushBack(index)
+    def append(self,value):
+        self.pushBack(value)
+
+    def pop(self):
+        return self.popFront(self)
 
 class binListIter():
     def __init__(self,list):
